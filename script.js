@@ -232,6 +232,27 @@
     });
   }
 
+  /* ---------- Pick a suitably theatrical British voice ---------- */
+  function getBardVoice() {
+    const voices = speechSynthesis.getVoices();
+    if (!voices.length) return null;
+    // Preferred named British male voices across macOS / Chrome / Edge
+    const preferred = ["daniel", "arthur", "george", "oliver", "ryan", "uk english male", "google uk english male"];
+    const lower = (v) => (v.name + " " + v.lang).toLowerCase();
+    for (const name of preferred) {
+      const hit = voices.find((v) => lower(v).includes(name));
+      if (hit) return hit;
+    }
+    // Otherwise any British English voice, then any English voice
+    return voices.find((v) => /en-?gb/i.test(v.lang)) ||
+           voices.find((v) => /^en/i.test(v.lang)) || null;
+  }
+  // Voice list often loads asynchronously — warm it up.
+  if ("speechSynthesis" in window) {
+    speechSynthesis.getVoices();
+    speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+  }
+
   /* ---------- Insult forge ---------- */
   function setupInsults() {
     const el = $("#insult-text");
@@ -250,7 +271,10 @@
       const phrase = "Thou " + el.textContent;
       if (!("speechSynthesis" in window)) { toast("Speech not supported"); return; }
       const u = new SpeechSynthesisUtterance(phrase);
-      u.rate = 0.9; u.pitch = 0.85;
+      const voice = getBardVoice();
+      if (voice) { u.voice = voice; u.lang = voice.lang; } else { u.lang = "en-GB"; }
+      u.rate = 0.82;  // slow, declamatory
+      u.pitch = 0.7;  // deep, theatrical
       u.onstart = () => toast("Hear the Bard's scorn!", 0); // show until speech ends
       u.onend = hideToast;
       u.onerror = hideToast;
