@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="An interactive journey through the life, plays, and immortal words of William Shakespeare." />
+  <title>The Bard &mdash; An Interactive Shakespeare Showcase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎭</text></svg>" />
+</head>
+<body>
+  <!-- Floating quill cursor trail -->
+  <div id="ink-trail"></div>
+
+  <!-- Progress bar -->
+  <div id="scroll-progress"></div>
+
+  <!-- Navigation -->
+  <nav id="navbar">
+    <a href="#hero" class="brand">🎭 The&nbsp;Bard</a>
+    <button id="nav-toggle" aria-label="Toggle navigation">☰</button>
+    <ul id="nav-links">
+      <li><a href="#life">Life</a></li>
+      <li><a href="#plays">Plays</a></li>
+      <li><a href="#quotes">Quotes</a></li>
+      <li><a href="#insults">Insult Forge</a></li>
+      <li><a href="#words">Word Coiner</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <header id="hero">
+    <div class="hero-inner">
+      <p class="hero-eyebrow">1564 &mdash; 1616</p>
+      <h1 class="hero-title">William<br /><span>Shakespeare</span></h1>
+      <p class="hero-tag" id="typed-line"></p>
+      <p class="hero-sub">38 plays &middot; 154 sonnets &middot; 1,700+ words invented &middot; 1 immortal legacy</p>
+      <a href="#life" class="cta">Begin the Journey ↓</a>
+    </div>
+    <div class="hero-floaties" aria-hidden="true"></div>
+  </header>
+
+  <main>
+    <!-- LIFE TIMELINE -->
+    <section id="life" class="section">
+      <h2 class="section-title">A Life in <span>Five Acts</span></h2>
+      <p class="section-lead">Scroll through the milestones of history's greatest playwright. Click any act to reveal the story.</p>
+      <div class="timeline" id="timeline"></div>
+    </section>
+
+    <!-- PLAYS EXPLORER -->
+    <section id="plays" class="section alt">
+      <h2 class="section-title">Explore the <span>Plays</span></h2>
+      <p class="section-lead">Filter the canon by genre. Hover a card to flip it and read its one-line essence.</p>
+      <div class="filter-bar" id="filter-bar">
+        <button class="filter active" data-genre="all">All</button>
+        <button class="filter" data-genre="tragedy">Tragedies</button>
+        <button class="filter" data-genre="comedy">Comedies</button>
+        <button class="filter" data-genre="history">Histories</button>
+        <button class="filter" data-genre="romance">Romances</button>
+      </div>
+      <div class="play-grid" id="play-grid"></div>
+    </section>
+
+    <!-- QUOTE GENERATOR -->
+    <section id="quotes" class="section">
+      <h2 class="section-title">The <span>Quote</span> Oracle</h2>
+      <p class="section-lead">Summon timeless wisdom from the Bard. Press the button &mdash; or the spacebar.</p>
+      <div class="quote-stage">
+        <blockquote id="quote-text">&ldquo;We know what we are, but know not what we may be.&rdquo;</blockquote>
+        <cite id="quote-source">&mdash; Hamlet, Act IV</cite>
+      </div>
+      <div class="quote-controls">
+        <button id="new-quote" class="btn-primary">✨ Summon a Quote</button>
+        <button id="copy-quote" class="btn-ghost">📋 Copy</button>
+      </div>
+    </section>
+
+    <!-- INSULT GENERATOR -->
+    <section id="insults" class="section alt">
+      <h2 class="section-title">The Shakespearean <span>Insult Forge</span></h2>
+      <p class="section-lead">Authentic vocabulary, Elizabethan venom. Forge a fresh insult and hurl it at thy foes.</p>
+      <div class="insult-stage">
+        <p class="insult-prefix">Thou</p>
+        <p id="insult-text">art a most poisonous bunch-back'd toad!</p>
+      </div>
+      <div class="quote-controls">
+        <button id="new-insult" class="btn-primary">⚔️ Forge an Insult</button>
+        <button id="speak-insult" class="btn-ghost">🔊 Speak It</button>
+      </div>
+    </section>
+
+    <!-- WORD COINER -->
+    <section id="words" class="section">
+      <h2 class="section-title">Words He <span>Gave Us</span></h2>
+      <p class="section-lead">Shakespeare coined or popularized hundreds of words we still use daily. Tap a tile to learn more.</p>
+      <div class="word-cloud" id="word-cloud"></div>
+    </section>
+
+    <!-- QUIZ -->
+    <section id="quiz" class="section alt">
+      <h2 class="section-title">Art Thou a <span>True Scholar?</span></h2>
+      <p class="section-lead">Five questions stand between thee and the title of Bardic Master.</p>
+      <div class="quiz-card" id="quiz-card"></div>
+    </section>
+  </main>
+
+  <footer id="footer">
+    <p class="footer-quote">&ldquo;All the world&rsquo;s a stage, and all the men and women merely players.&rdquo;</p>
+    <p class="footer-meta">Built with 🎭 as an interactive Shakespeare showcase. Public-domain texts &middot; <span id="year"></span></p>
+  </footer>
+
+  <button id="to-top" aria-label="Back to top">↑</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
