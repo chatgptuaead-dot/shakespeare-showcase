@@ -233,25 +233,33 @@
   }
 
   /* ---------- Pick a suitably theatrical British voice ---------- */
-  function getBardVoice() {
-    const voices = speechSynthesis.getVoices();
-    if (!voices.length) return null;
-    // Preferred named British male voices across macOS / Chrome / Edge
-    const preferred = ["daniel", "arthur", "george", "oliver", "ryan", "uk english male", "google uk english male"];
+  function pickBardVoice(voices) {
+    if (!voices || !voices.length) return null;
     const lower = (v) => (v.name + " " + v.lang).toLowerCase();
+    // Preferred named British male voices across macOS / Chrome / Edge
+    const preferred = ["daniel", "arthur", "george", "oliver", "ryan",
+                       "google uk english male", "uk english male", "english (great britain)"];
     for (const name of preferred) {
       const hit = voices.find((v) => lower(v).includes(name));
       if (hit) return hit;
     }
-    // Otherwise any British English voice, then any English voice
-    return voices.find((v) => /en-?gb/i.test(v.lang)) ||
+    // Any British English voice (handles en-GB / en_GB), then any English voice.
+    return voices.find((v) => /en[-_]?gb/i.test(v.lang)) ||
+           voices.find((v) => /english.*(britain|uk|kingdom)/i.test(v.name)) ||
            voices.find((v) => /^en/i.test(v.lang)) || null;
   }
-  // Voice list often loads asynchronously — warm it up.
-  if ("speechSynthesis" in window) {
-    speechSynthesis.getVoices();
-    speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+
+  // Resolve voices even though the list loads asynchronously.
+  function whenVoicesReady(cb) {
+    if (!("speechSynthesis" in window)) { cb([]); return; }
+    let v = speechSynthesis.getVoices();
+    if (v.length) { cb(v); return; }
+    let done = false;
+    const finish = () => { if (done) return; done = true; cb(speechSynthesis.getVoices()); };
+    speechSynthesis.addEventListener("voiceschanged", finish, { once: true });
+    setTimeout(finish, 1000); // fallback if the event never fires
   }
+  if ("speechSynthesis" in window) speechSynthesis.getVoices(); // warm up
 
   /* ---------- Insult forge ---------- */
   function setupInsults() {
@@ -268,19 +276,20 @@
     }
     $("#new-insult").addEventListener("click", forge);
     $("#speak-insult").addEventListener("click", () => {
-      const phrase = "Thou " + el.textContent;
       if (!("speechSynthesis" in window)) { toast("Speech not supported"); return; }
-      const u = new SpeechSynthesisUtterance(phrase);
-      const voice = getBardVoice();
-      if (voice) { u.voice = voice; u.lang = voice.lang; } else { u.lang = "en-GB"; }
-      u.rate = 0.82;  // slow, declamatory
-      u.pitch = 0.7;  // deep, theatrical
-      u.onstart = () => toast("Hear the Bard's scorn!", 0); // show until speech ends
-      u.onend = hideToast;
-      u.onerror = hideToast;
-      speechSynthesis.cancel();
-      hideToast();
-      speechSynthesis.speak(u);
+      const phrase = "Thou " + el.textContent;
+      whenVoicesReady((voices) => {
+        const u = new SpeechSynthesisUtterance(phrase);
+        const voice = pickBardVoice(voices);
+        if (voice) { u.voice = voice; u.lang = voice.lang; } else { u.lang = "en-GB"; }
+        u.rate = 0.82;  // slow, declamatory
+        u.pitch = 0.7;  // deep, theatrical
+        u.onstart = () => toast("Hear the Bard's scorn!", 0); // show until speech ends
+        u.onend = hideToast;
+        u.onerror = hideToast;
+        speechSynthesis.cancel();
+        speechSynthesis.speak(u);
+      });
     });
   }
 
