@@ -86,13 +86,17 @@
   const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
   const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
-  function toast(msg) {
+  function toast(msg, duration = 1800) {
     let t = $("#toast");
     if (!t) { t = document.createElement("div"); t.id = "toast"; document.body.appendChild(t); }
     t.textContent = msg;
     t.classList.add("show");
     clearTimeout(t._timer);
-    t._timer = setTimeout(() => t.classList.remove("show"), 1800);
+    if (duration > 0) t._timer = setTimeout(() => t.classList.remove("show"), duration);
+  }
+  function hideToast() {
+    const t = $("#toast");
+    if (t) { clearTimeout(t._timer); t.classList.remove("show"); }
   }
 
   /* ---------- Hero typewriter ---------- */
@@ -174,6 +178,8 @@
           </div>
           <div class="face back"><p>${p.line}</p></div>
         </div>`;
+      // tap to flip (touch devices can't hover)
+      card.addEventListener("click", () => card.classList.toggle("flipped"));
       grid.appendChild(card);
     });
 
@@ -245,9 +251,12 @@
       if (!("speechSynthesis" in window)) { toast("Speech not supported"); return; }
       const u = new SpeechSynthesisUtterance(phrase);
       u.rate = 0.9; u.pitch = 0.85;
+      u.onstart = () => toast("Hear the Bard's scorn!", 0); // show until speech ends
+      u.onend = hideToast;
+      u.onerror = hideToast;
       speechSynthesis.cancel();
+      hideToast();
       speechSynthesis.speak(u);
-      toast("Hear the Bard's scorn!");
     });
   }
 

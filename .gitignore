@@ -1,0 +1,6 @@
+# local render/preview artifacts
+render*.html
+render*.png
+_p*.png
+_probe.html
+.DS_Store

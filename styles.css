@@ -180,7 +180,8 @@ h1, h2, h3, .brand, .filter, nav a { font-family: "Cinzel", serif; }
 .play-card.enter { animation: pop 0.45s ease both; }
 @keyframes pop { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
 .flip { position: relative; width: 100%; height: 100%; transition: transform 0.7s; transform-style: preserve-3d; }
-.play-card:hover .flip { transform: rotateY(180deg); }
+.play-card:hover .flip,
+.play-card.flipped .flip { transform: rotateY(180deg); }
 .face {
   position: absolute; inset: 0; backface-visibility: hidden; border-radius: var(--radius);
   padding: 1.4rem; display: flex; flex-direction: column; justify-content: center;
@@ -296,6 +297,18 @@ h1, h2, h3, .brand, .filter, nav a { font-family: "Cinzel", serif; }
 /* ---------- Responsive ---------- */
 @media (max-width: 760px) {
   #nav-toggle { display: block; }
+  #navbar { padding: 0.7rem 1.1rem; }
+
+  #hero { min-height: 90vh; }
+  .hero-title { font-size: clamp(2.4rem, 11vw, 4.2rem); letter-spacing: 1px; }
+  .hero-eyebrow { letter-spacing: 5px; }
+  .section { padding: 4.5rem 1.2rem; }
+  .play-grid { grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+  .play-card { height: 200px; }
+  .quote-stage, .insult-stage { padding: 2rem 1.2rem; }
+  .quiz-card { padding: 1.6rem 1.3rem; }
+  .quiz-q { font-size: 1.15rem; }
+  #to-top { bottom: 1.2rem; right: 1.2rem; }
   #nav-links {
     position: absolute; top: 100%; right: 0; flex-direction: column; gap: 0;
     background: rgba(12,9,6,0.97); width: 220px; padding: 1rem 0;
@@ -309,6 +322,16 @@ h1, h2, h3, .brand, .filter, nav a { font-family: "Cinzel", serif; }
   .tl-item, .tl-item:nth-child(even) { width: 100%; left: 0; text-align: left; padding-left: 3rem; padding-right: 0.5rem; }
   .tl-item:nth-child(odd) { text-align: left; }
   .tl-item:nth-child(odd) .tl-dot, .tl-item:nth-child(even) .tl-dot { left: 9px; right: auto; }
+}
+
+@media (max-width: 430px) {
+  .hero-title { letter-spacing: 0; font-size: clamp(1.8rem, 12vw, 3rem); }
+  .hero-sub { font-size: 0.82rem; }
+  .filter { padding: 0.45rem 1rem; font-size: 0.72rem; }
+  .play-grid { grid-template-columns: 1fr; }
+  .play-card { height: 210px; }
+  .section-lead { font-size: 1rem; }
+  .insult-prefix { font-size: 1.1rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
