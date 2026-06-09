@@ -288,11 +288,12 @@ h1, h2, h3, .brand, .filter, nav a { font-family: "Cinzel", serif; }
 
 /* ---------- Toast ---------- */
 #toast {
-  position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(120%);
+  position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(calc(100% + 3rem));
   background: var(--gold); color: var(--parchment); padding: 0.8rem 1.6rem; border-radius: 50px;
-  font-family: "Cinzel", serif; letter-spacing: 1px; z-index: 1100; transition: transform 0.4s; font-size: 0.85rem;
+  font-family: "Cinzel", serif; letter-spacing: 1px; z-index: 1100;
+  transition: transform 0.4s, opacity 0.4s; opacity: 0; font-size: 0.85rem;
 }
-#toast.show { transform: translateX(-50%) translateY(0); }
+#toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 760px) {
